@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .outer-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .outer-table th, 
+    .outer-table td {
+      border: 2px solid #333;
+      padding: 10px;
+      text-align: left;
+    }
+
+    .nested-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 5px 0;
+    }
+
+    .nested-table th,
+    .nested-table td {
+      border: 1px solid #666;
+      padding: 5px;
+    }
+
+    .error {
+      border-color: red !important;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 12px;
+      display: none;
+    }
+
+    input[type="text"] {
+      width: 90%;
+      padding: 5px;
+      margin: 2px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <form id="nestedTableForm">
+    <table class="outer-table">
+      <tr>
+        <th>Header column 1</th>
+        <th>Header column 2</th>
+        <th>Header column 3</th>
+        <th>Header column 4</th>
+      </tr>
+      <tr>
+        <td>
+          <input type="text" name="row2-item1" placeholder="Row 2 - Item 1">
+          <div class="error-message">This field is required</div>
+        </td>
+        <td>
+          <input type="text" name="row2-item2" placeholder="Row 2 - Item 2">
+          <div class="error-message">This field is required</div>
+        </td>
+        <td>
+          <table class="nested-table">
+            <tr>
+              <th>Row 1 Header</th>
+              <td>
+                <input type="text" name="nested1-row1" placeholder="Item">
+                <div class="error-message">This field is required</div>
+              </td>
+            </tr>
+            <tr>
+              <th>Row 2 Header</th>
+              <td>
+                <input type="text" name="nested1-row2" placeholder="Item">
+                <div class="error-message">This field is required</div>
+              </td>
+            </tr>
+            <tr>
+              <th>Row 3 Header</th>
+              <td>
+                <input type="text" name="nested1-row3" placeholder="Item">
+                <div class="error-message">This field is required</div>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <input type="text" name="row2-item4" placeholder="Row 2 - Item 4">
+          <div class="error-message">This field is required</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table class="nested-table">
+            <tr>
+              <th>Row 1 Header</th>
+              <td>
+                <input type="text" name="nested2-row1" placeholder="Item">
+                <div class="error-message">This field is required</div>
+              </td>
+            </tr>
+            <tr>
+              <th>Row 2 Header</th>
+              <td>
+                <input type="text" name="nested2-row2" placeholder="Item">
+                <div class="error-message">This field is required</div>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <input type="text" name="row3-item2" placeholder="Row 3 - Item 2">
+          <div class="error-message">This field is required</div>
+        </td>
+        <td>
+          <input type="text" name="row3-item3" placeholder="Row 3 - Item 3">
+          <div class="error-message">This field is required</div>
+        </td>
+        <td>
+          <input type="text" name="row3-item4" placeholder="Row 3 - Item 4">
+          <div class="error-message">This field is required</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="text" name="row4-item1" placeholder="Row 4 - Item 1">
+          <div class="error-message">This field is required</div>
+        </td>
+        <td>
+          <input type="text" name="row4-item2" placeholder="Row 4 - Item 2">
+          <div class="error-message">This field is required</div>
+        </td>
+        <td>
+          <input type="text" name="row4-item3" placeholder="Row 4 - Item 3">
+          <div class="error-message">This field is required</div>
+        </td>
+        <td>
+          <input type="text" name="row4-item4" placeholder="Row 4 - Item 4">
+          <div class="error-message">This field is required</div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="4">
+          <input type="text" name="row5" placeholder="Row 5 - Last row of outer table">
+          <div class="error-message">This field is required</div>
+        </td>
+      </tr>
+    </table>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    document.getElementById('nestedTableForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Reset previous errors
+      const errors = document.querySelectorAll('.error');
+      errors.forEach(error => error.classList.remove('error'));
+      
+      const errorMessages = document.querySelectorAll('.error-message');
+      errorMessages.forEach(msg => msg.style.display = 'none');
+      
+      // Get all input fields
+      const inputs = this.querySelectorAll('input[type="text"]');
+      let hasError = false;
+      
+      // Validate each input
+      inputs.forEach(input => {
+        if (!input.value.trim()) {
+          input.classList.add('error');
+          const errorMessage = input.nextElementSibling;
+          if (errorMessage && errorMessage.classList.contains('error-message')) {
+            errorMessage.style.display = 'block';
+          }
+          hasError = true;
+        }
+      });
+      
+      if (!hasError) {
+        // Form is valid, collect and log the data
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+        console.log('Form submitted successfully:', data);
+        alert('Form submitted successfully!');
+      }
+    });
+  </script>
+</body>
+</html>
